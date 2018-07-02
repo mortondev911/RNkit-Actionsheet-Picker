@@ -175,29 +175,28 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         formatter = [NSDateFormatter new];
-
-        if (mode == UIDatePickerModeDate) {
-
-        }
-        switch (mode) {
-            case UIDatePickerModeDate: {
-                formatter.dateFormat = @"yyyy-MM-dd";
-            }
-                break;
-            case UIDatePickerModeTime: {
-                formatter.dateFormat = @"HH:mm:ss";
-            }
-                break;
-            case UIDatePickerModeDateAndTime: {
-                formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-            }
-                break;
-            default:
-                formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-                break;
-        }
-
     });
+    
+    if (mode == UIDatePickerModeDate) {
+
+    }
+    switch (mode) {
+        case UIDatePickerModeDate: {
+            formatter.dateFormat = @"yyyy-MM-dd";
+        }
+            break;
+        case UIDatePickerModeTime: {
+            formatter.dateFormat = @"HH:mm:ss";
+        }
+            break;
+        case UIDatePickerModeDateAndTime: {
+            formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        }
+            break;
+        default:
+            formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            break;
+    }
 
     NSString *dateString = [formatter stringFromDate:date];
 
