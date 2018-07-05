@@ -104,9 +104,16 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
                                          if (!strongSelf) {
                                              return;
                                          }
-                                         NSString *selectedDateString = [strongSelf getStringFromDate:selectedDate withDatePickerMode:datePickerMode];
+                                         if (datePickerMode == UIDatePickerModeCountDownTimer) {
+                                            callback(@[@{@"type": @"done", @"selectedDate": selectedDate}]);
+                                         }
+                                         else {
+                                           NSString *selectedDateString = [strongSelf getStringFromDate:selectedDate withDatePickerMode:datePickerMode];
 
-                                         callback(@[@{@"type": @"done", @"selectedDate": selectedDateString}]);
+                                           callback(@[@{@"type": @"done", @"selectedDate": selectedDateString}]);
+                                         }
+                                         
+                                         
     } cancelBlock:^(ActionSheetDatePicker *picker) {
         callback(@[@{@"type": @"cancel"}]);
     } origin:presentingController.view];
