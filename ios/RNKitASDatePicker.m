@@ -106,8 +106,12 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
                                          if (!strongSelf) {
                                              return;
                                          }
-                                         NSString *selectedDateString = [strongSelf getStringFromDate:selectedDate withDatePickerMode:datePickerMode];
-                                         callback(@[@{@"type": @"done", @"selectedDate": selectedDateString, @"selectedDuration": selectedDuration}]);
+                                         if (datePickerMode == UIDatePickerModeCountDownTimer) {
+                                             callback(@[@{@"type": @"done", @"selectedDate": selectedDuration}]);
+                                         } else {
+                                             NSString *selectedDateString = [strongSelf getStringFromDate:selectedDate withDatePickerMode:datePickerMode];
+                                             callback(@[@{@"type": @"done", @"selectedDate": selectedDateString}]);
+                                         }
     } cancelBlock:^(ActionSheetDatePicker *picker) {
         callback(@[@{@"type": @"cancel"}]);
     } origin:presentingController.view];
@@ -163,11 +167,15 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
 {
     if (!sender || ![sender isKindOfClass:[UIDatePicker class]])
         return;
+    
     UIDatePicker *datePicker = (UIDatePicker *)sender;
 
-    NSString *selectedDateString = [self getStringFromDate:datePicker.date withDatePickerMode:datePicker.datePickerMode];
-
-    [self sendEventWithName:@"DatePickerEvent" body:@{@"selectedDate": selectedDateString, @"selectedDuration": datePicker.countDownDuration}];
+    if (datePicker.datePickerMode == UIDatePickerModeCountDownTimer) {
+        [self sendEventWithName:@"DatePickerEvent" body:@{@"selectedDate": datePicker.countDownDuration}];
+    } else {
+        NSString *selectedDateString = [self getStringFromDate:datePicker.date withDatePickerMode:datePicker.datePickerMode];
+        [self sendEventWithName:@"DatePickerEvent" body:@{@"selectedDate": selectedDateString}];
+    }
 }
 
 - (NSString *) getStringFromDate: (NSDate *)date withDatePickerMode: (UIDatePickerMode) mode
