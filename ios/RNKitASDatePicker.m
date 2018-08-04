@@ -71,10 +71,10 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     NSString *cancelText                = [RCTConvert NSString:args[@"cancelText"]];
     UIColor *cancelTextColor            = [RCTConvert UIColor:args[@"cancelTextColor"]];
     NSDate *selectedDate                = [self getDateFromString:[RCTConvert NSString:args[@"selectedDate"]]];
-    NSTimeInterval selectedDuration     = [RCTConvert NSTimeInterval:args[@"selectedDuration"]]];
+    NSTimeInterval selectedDuration     = [RCTConvert NSTimeInterval:args[@"selectedDuration"]];
     NSDate *minimumDate                 = [self getDateFromString:[RCTConvert NSString:args[@"minimumDate"]]];
     NSDate *maximumDate                 = [self getDateFromString:[RCTConvert NSString:args[@"maximumDate"]]];
-    NSNumber minuteInterval             = [RCTConvert NSNumber:args[@"minuteInterval"]]];
+    NSInteger minuteInterval            = [RCTConvert NSInteger:args[@"minuteInterval"]];
     UIDatePickerMode datePickerMode     = [RCTConvert UIDatePickerMode:args[@"datePickerMode"]];
 
     _callback = callback;
@@ -107,7 +107,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
                                              return;
                                          }
                                          if (datePickerMode == UIDatePickerModeCountDownTimer) {
-                                             callback(@[@{@"type": @"done", @"selectedDate": selectedDuration}]);
+                                             callback(@[@{@"type": @"done", @"selectedDate": @(selectedDuration)}]);
                                          } else {
                                              NSString *selectedDateString = [strongSelf getStringFromDate:selectedDate withDatePickerMode:datePickerMode];
                                              callback(@[@{@"type": @"done", @"selectedDate": selectedDateString}]);
@@ -167,7 +167,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     UIDatePicker *datePicker = (UIDatePicker *)sender;
 
     if (datePicker.datePickerMode == UIDatePickerModeCountDownTimer) {
-        [self sendEventWithName:@"DatePickerEvent" body:@{@"selectedDate": datePicker.countDownDuration}];
+        [self sendEventWithName:@"DatePickerEvent" body:@{@"selectedDate": @(datePicker.countDownDuration)}];
     } else {
         NSString *selectedDateString = [self getStringFromDate:datePicker.date withDatePickerMode:datePicker.datePickerMode];
         [self sendEventWithName:@"DatePickerEvent" body:@{@"selectedDate": selectedDateString}];
