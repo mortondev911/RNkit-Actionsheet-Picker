@@ -32,31 +32,32 @@
 @interface ActionSheetDatePicker()
 @property (nonatomic, assign) UIDatePickerMode datePickerMode;
 @property (nonatomic, strong) NSDate *selectedDate;
+@property (nonatomic, assign) NSTimeInterval selectedDuration;
 @end
 
 @implementation ActionSheetDatePicker
 
 + (instancetype)showPickerWithTitle:(NSString *)title
-           datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate
+           datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate selectedDuration:(NSTimeInterval)selectedDuration
                    target:(id)target action:(SEL)action origin:(id)origin {
-    ActionSheetDatePicker *picker = [[ActionSheetDatePicker alloc] initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate target:target action:action origin:origin];
+    ActionSheetDatePicker *picker = [[ActionSheetDatePicker alloc] initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate selectedDuration:selectedDuration target:target action:action origin:origin];
     [picker showActionSheetPicker];
     return picker;
 }
 
 + (instancetype)showPickerWithTitle:(NSString *)title
-           datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate
+           datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate selectedDuration:(NSTimeInterval)selectedDuration
                    target:(id)target action:(SEL)action origin:(id)origin cancelAction:(SEL)cancelAction {
-    ActionSheetDatePicker *picker = [[ActionSheetDatePicker alloc] initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate target:target action:action origin:origin cancelAction:cancelAction];
+    ActionSheetDatePicker *picker = [[ActionSheetDatePicker alloc] initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate selectedDuration:selectedDuration target:target action:action origin:origin cancelAction:cancelAction];
     [picker showActionSheetPicker];
     return picker;
 }
 
 + (instancetype)showPickerWithTitle:(NSString *)title
-           datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate
+           datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate selectedDuration:(NSTimeInterval)selectedDuration
               minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate
                    target:(id)target action:(SEL)action origin:(id)origin {
-    ActionSheetDatePicker *picker = [[ActionSheetDatePicker alloc] initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate target:target action:action origin:origin];
+    ActionSheetDatePicker *picker = [[ActionSheetDatePicker alloc] initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate selectedDuration:selectedDuration target:target action:action origin:origin];
     [picker setMinimumDate:minimumDate];
     [picker setMaximumDate:maximumDate];
     [picker showActionSheetPicker];
@@ -66,6 +67,7 @@
 + (instancetype)showPickerWithTitle:(NSString *)title
            datePickerMode:(UIDatePickerMode)datePickerMode
              selectedDate:(NSDate *)selectedDate
+         selectedDuration:(NSTimeInterval)selectedDuration
                 doneBlock:(ActionDateDoneBlock)doneBlock
               cancelBlock:(ActionDateCancelBlock)cancelBlock
                    origin:(UIView*)view
@@ -73,6 +75,7 @@
     ActionSheetDatePicker* picker = [[ActionSheetDatePicker alloc] initWithTitle:title
                                                                   datePickerMode:datePickerMode
                                                                     selectedDate:selectedDate
+                                                                selectedDuration:selectedDuration
                                                                        doneBlock:doneBlock
                                                                      cancelBlock:cancelBlock
                                                                           origin:view];
@@ -83,6 +86,7 @@
 + (instancetype)showPickerWithTitle:(NSString *)title
            datePickerMode:(UIDatePickerMode)datePickerMode
              selectedDate:(NSDate *)selectedDate
+         selectedDuration:(NSTimeInterval)selectedDuration
               minimumDate:(NSDate *)minimumDate
               maximumDate:(NSDate *)maximumDate
                 doneBlock:(ActionDateDoneBlock)doneBlock
@@ -92,6 +96,7 @@
     ActionSheetDatePicker* picker = [[ActionSheetDatePicker alloc] initWithTitle:title
                                                                   datePickerMode:datePickerMode
                                                                     selectedDate:selectedDate
+                                                                selectedDuration:selectedDuration
                                                                        doneBlock:doneBlock
                                                                      cancelBlock:cancelBlock
                                                                           origin:view];
@@ -101,38 +106,40 @@
     return picker;
 }
 
-- (id)initWithTitle:(NSString *)title datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate target:(id)target action:(SEL)action origin:(id)origin
+- (id)initWithTitle:(NSString *)title datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate selectedDuration:(NSTimeInterval)selectedDuration target:(id)target action:(SEL)action origin:(id)origin
 {
-    self = [self initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate target:target action:action origin:origin cancelAction:nil];
+    self = [self initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate selectedDuration:selectedDuration target:target action:action origin:origin cancelAction:nil];
     return self;
 }
 
-- (instancetype)initWithTitle:(NSString *)title datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate target:(id)target action:(SEL)action origin:(id)origin
+- (instancetype)initWithTitle:(NSString *)title datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate selectedDuration:(NSTimeInterval)selectedDuration minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate target:(id)target action:(SEL)action origin:(id)origin
 {
-    self = [self initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate target:target action:action origin:origin cancelAction:nil];
+    self = [self initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate selectedDuration:selectedDuration target:target action:action origin:origin cancelAction:nil];
     self.minimumDate = minimumDate;
     self.maximumDate = maximumDate;
     return self;
 }
 
-- (instancetype)initWithTitle:(NSString *)title datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate target:(id)target action:(SEL)action origin:(id)origin cancelAction:(SEL)cancelAction
+- (instancetype)initWithTitle:(NSString *)title datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate selectedDuration:(NSTimeInterval)selectedDuration target:(id)target action:(SEL)action origin:(id)origin cancelAction:(SEL)cancelAction
 {
     self = [super initWithTarget:target successAction:action cancelAction:cancelAction origin:origin];
     if (self) {
         self.title = title;
         self.datePickerMode = datePickerMode;
         self.selectedDate = selectedDate;
+        self.selectedDuration = selectedDuration;
     }
     return self;
 }
 
-- (instancetype)initWithTitle:(NSString *)title datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate target:(id)target action:(SEL)action cancelAction:(SEL)cancelAction origin:(id)origin
+- (instancetype)initWithTitle:(NSString *)title datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate selectedDuration:(NSTimeInterval)selectedDuration minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate target:(id)target action:(SEL)action cancelAction:(SEL)cancelAction origin:(id)origin
 {
     self = [super initWithTarget:target successAction:action cancelAction:cancelAction origin:origin];
     if (self) {
         self.title = title;
         self.datePickerMode = datePickerMode;
         self.selectedDate = selectedDate;
+        self.selectedDuration = selectedDuration;
         self.minimumDate = minimumDate;
         self.maximumDate = maximumDate;
     }
@@ -142,11 +149,12 @@
 - (instancetype)initWithTitle:(NSString *)title
                datePickerMode:(UIDatePickerMode)datePickerMode
                  selectedDate:(NSDate *)selectedDate
+             selectedDuration:(NSTimeInterval)selectedDuration
                     doneBlock:(ActionDateDoneBlock)doneBlock
                   cancelBlock:(ActionDateCancelBlock)cancelBlock
                        origin:(UIView*)origin
 {
-    self = [self initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate target:nil action:nil origin:origin];
+    self = [self initWithTitle:title datePickerMode:datePickerMode selectedDate:selectedDate selectedDuration:selectedDuration target:nil action:nil origin:origin];
     if (self) {
         self.onActionSheetDone = doneBlock;
         self.onActionSheetCancel = cancelBlock;
@@ -168,11 +176,11 @@
     // if datepicker is set with a date in countDownMode then
     // 1h is added to the initial countdown
     if (self.datePickerMode == UIDatePickerModeCountDownTimer) {
-        datePicker.countDownDuration = self.countDownDuration;
+        datePicker.countDownDuration = self.selectedDuration;
         // Due to a bug in UIDatePicker, countDownDuration needs to be set asynchronously
         // more info: http://stackoverflow.com/a/20204317/1161723
         dispatch_async(dispatch_get_main_queue(), ^{
-            datePicker.countDownDuration = self.countDownDuration;
+            datePicker.countDownDuration = self.selectedDuration;
         });
     } else {
         [datePicker setDate:self.selectedDate animated:NO];
@@ -190,18 +198,14 @@
 {
     if (self.onActionSheetDone)
     {
-        if (self.datePickerMode == UIDatePickerModeCountDownTimer)
-            self.onActionSheetDone(self, @(((UIDatePicker *)self.pickerView).countDownDuration), origin);
-        else
-            self.onActionSheetDone(self, self.selectedDate, origin);
-
+        self.onActionSheetDone(self, self.selectedDate, self.selectedDuration, origin);
         return;
     }
     else if ([target respondsToSelector:action])
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         if (self.datePickerMode == UIDatePickerModeCountDownTimer) {
-            [target performSelector:action withObject:@(((UIDatePicker *)self.pickerView).countDownDuration) withObject:origin];
+            [target performSelector:action withObject:@(self.selectedDuration) withObject:origin];
 
         } else {
             [target performSelector:action withObject:self.selectedDate withObject:origin];
@@ -234,7 +238,7 @@
         return;
     UIDatePicker *datePicker = (UIDatePicker *)sender;
     self.selectedDate = datePicker.date;
-    self.countDownDuration = datePicker.countDownDuration;
+    self.selectedDuration = datePicker.countDownDuration;
 }
 
 - (void)customButtonPressed:(id)sender {

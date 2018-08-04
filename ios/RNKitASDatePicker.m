@@ -70,18 +70,19 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     UIColor *doneTextColor              = [RCTConvert UIColor:args[@"doneTextColor"]];
     NSString *cancelText                = [RCTConvert NSString:args[@"cancelText"]];
     UIColor *cancelTextColor            = [RCTConvert UIColor:args[@"cancelTextColor"]];
-
     NSDate *selectedDate                = [self getDateFromString:[RCTConvert NSString:args[@"selectedDate"]]];
+    NSTimeInterval selectedDuration     = [RCTConvert NSTimeInterval:args[@"selectedDuration"]]];
     NSDate *minimumDate                 = [self getDateFromString:[RCTConvert NSString:args[@"minimumDate"]]];
     NSDate *maximumDate                 = [self getDateFromString:[RCTConvert NSString:args[@"maximumDate"]]];
-
-    UIDatePickerMode datePickerMode    = [RCTConvert UIDatePickerMode:args[@"datePickerMode"]];
+    NSNumber minuteInterval             = [RCTConvert NSNumber:args[@"minuteInterval"]]];
+    UIDatePickerMode datePickerMode     = [RCTConvert UIDatePickerMode:args[@"datePickerMode"]];
 
     _callback = callback;
 
     // default value
-    selectedDate    = selectedDate ? selectedDate : [NSDate new];
 //    datePickerMode  = datePickerMode ? datePickerMode : UIDatePickerModeDate;
+    selectedDate     = selectedDate ? selectedDate : [NSDate new];
+    selectedDuration = selectedDuration ? selectedDuration : 0;
 
     // set button
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:doneText style:UIBarButtonItemStyleDone target:nil action:nil];
@@ -99,21 +100,14 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
                                      initWithTitle:titleText
                                      datePickerMode:datePickerMode
                                      selectedDate:selectedDate
-                                     doneBlock:^(ActionSheetDatePicker *picker, id selectedDate, id origin) {
+                                     selectedDuration:selectedDuration
+                                     doneBlock:^(ActionSheetDatePicker *picker, NSDate *selectedDate, NSTimeInterval selectedDuration, id origin) {
                                          __typeof(self) strongSelf = weakSelf;
                                          if (!strongSelf) {
                                              return;
                                          }
-                                         if (datePickerMode == UIDatePickerModeCountDownTimer) {
-                                            callback(@[@{@"type": @"done", @"selectedDate": selectedDate}]);
-                                         }
-                                         else {
-                                           NSString *selectedDateString = [strongSelf getStringFromDate:selectedDate withDatePickerMode:datePickerMode];
-
-                                           callback(@[@{@"type": @"done", @"selectedDate": selectedDateString}]);
-                                         }
-                                         
-                                         
+                                         NSString *selectedDateString = [strongSelf getStringFromDate:selectedDate withDatePickerMode:datePickerMode];
+                                         callback(@[@{@"type": @"done", @"selectedDate": selectedDateString, @"selectedDuration": selectedDuration}]);
     } cancelBlock:^(ActionSheetDatePicker *picker) {
         callback(@[@{@"type": @"cancel"}]);
     } origin:presentingController.view];
@@ -132,6 +126,10 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
 
     if (maximumDate) {
         picker.maximumDate = maximumDate;
+    }
+    
+    if (minuteInterval) {
+        picker.minuteInterval = minuteInterval;
     }
 
     [picker showActionSheetPicker];
@@ -169,7 +167,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
 
     NSString *selectedDateString = [self getStringFromDate:datePicker.date withDatePickerMode:datePicker.datePickerMode];
 
-    [self sendEventWithName:@"DatePickerEvent" body:@{@"selectedDate": selectedDateString}];
+    [self sendEventWithName:@"DatePickerEvent" body:@{@"selectedDate": selectedDateString, @"selectedDuration": datePicker.countDownDuration}];
 }
 
 - (NSString *) getStringFromDate: (NSDate *)date withDatePickerMode: (UIDatePickerMode) mode
@@ -182,28 +180,25 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         formatter = [NSDateFormatter new];
-    });
-    
-    if (mode == UIDatePickerModeDate) {
 
-    }
-    switch (mode) {
-        case UIDatePickerModeDate: {
-            formatter.dateFormat = @"yyyy-MM-dd";
+        switch (mode) {
+            case UIDatePickerModeDate: {
+                formatter.dateFormat = @"yyyy-MM-dd";
+            }
+                break;
+            case UIDatePickerModeTime: {
+                formatter.dateFormat = @"HH:mm:ss";
+            }
+                break;
+            case UIDatePickerModeDateAndTime: {
+                formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            }
+                break;
+            default:
+                formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+                break;
         }
-            break;
-        case UIDatePickerModeTime: {
-            formatter.dateFormat = @"HH:mm:ss";
-        }
-            break;
-        case UIDatePickerModeDateAndTime: {
-            formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-        }
-            break;
-        default:
-            formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-            break;
-    }
+    });
 
     NSString *dateString = [formatter stringFromDate:date];
 
