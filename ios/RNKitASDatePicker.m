@@ -80,9 +80,8 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     _callback = callback;
 
     // default value
+    selectedDate    = selectedDate ? selectedDate : [NSDate new];
 //    datePickerMode  = datePickerMode ? datePickerMode : UIDatePickerModeDate;
-    selectedDate     = selectedDate ? selectedDate : [NSDate new];
-    selectedDuration = selectedDuration ? selectedDuration : 0;
 
     // set button
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:doneText style:UIBarButtonItemStyleDone target:nil action:nil];

@@ -173,13 +173,10 @@
     datePicker.timeZone = self.timeZone;
     datePicker.locale = self.locale;
 
-    // if datepicker is set with a date in countDownMode then
-    // 1h is added to the initial countdown
     if (self.datePickerMode == UIDatePickerModeCountDownTimer) {
-        datePicker.countDownDuration = self.selectedDuration;
         // Due to a bug in UIDatePicker, countDownDuration needs to be set asynchronously
         // more info: http://stackoverflow.com/a/20204317/1161723
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             datePicker.countDownDuration = self.selectedDuration;
         });
     } else {
