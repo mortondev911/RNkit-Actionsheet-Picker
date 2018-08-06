@@ -176,7 +176,7 @@
     if (self.datePickerMode == UIDatePickerModeCountDownTimer) {
         // Due to a bug in UIDatePicker, countDownDuration needs to be set asynchronously
         // more info: http://stackoverflow.com/a/20204317/1161723
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             datePicker.countDownDuration = self.selectedDuration;
         });
     } else {

@@ -71,7 +71,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     NSString *cancelText                = [RCTConvert NSString:args[@"cancelText"]];
     UIColor *cancelTextColor            = [RCTConvert UIColor:args[@"cancelTextColor"]];
     NSDate *selectedDate                = [self getDateFromString:[RCTConvert NSString:args[@"selectedDate"]]];
-    NSTimeInterval selectedDuration     = [RCTConvert NSTimeInterval:args[@"selectedDuration"]];
+    NSTimeInterval selectedDuration     = [RCTConvert double:args[@"selectedDuration"]];
     NSDate *minimumDate                 = [self getDateFromString:[RCTConvert NSString:args[@"minimumDate"]]];
     NSDate *maximumDate                 = [self getDateFromString:[RCTConvert NSString:args[@"maximumDate"]]];
     NSInteger minuteInterval            = [RCTConvert NSInteger:args[@"minuteInterval"]];
